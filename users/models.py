@@ -22,6 +22,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=60)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    bio = models.TextField(null=True)
+    telefone = models.CharField(max_length=15, blank=True, null=True)
+    endereco = models.CharField(max_length=200, null=True)
+    portfolio = models.URLField(blank=True, null=True)
+    escolaridade = models.CharField(max_length=100, null=True)
+    genero = models.CharField(max_length=50, choices=[('Feminino', 'Feminino'), ('Masculino', 'Masculino'), ('Outro', 'Outro')], null=True)
+    data_nascimento = models.DateTimeField(null=True)
     
     objects = CustomUserManager()
 
