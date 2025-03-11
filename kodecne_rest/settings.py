@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'tecnologias',
     'rest_framework'
 ]
 
@@ -132,7 +133,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+MEDIA_URL = "/media/"  # URL para acessar arquivos
+MEDIA_ROOT = BASE_DIR / "media" # Pasta onde os arquivos serão salvos
+
+# Adicionamos a configuração de arquivos estáticos, caso seja necessário no futuro
+STATIC_URL = "/static/"
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -1,5 +1,8 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.core.exceptions import ValidationError
+from tecnologias.models import TecnologiaModel
+import os
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -17,9 +20,16 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(email, password, **extra_fields)
 
+def validar_imagem_usuario(arquivo):
+    ext = os.path.splitext(arquivo.name)[1]
+    valid_extensions = [".jpg", ".png", ".jpeg"]
+    if ext.lower() not in valid_extensions:
+        raise ValidationError(f"Formato de arquivo não suportado: {ext}. Use PNG, JPEG, ou JPG.")
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=60)
+    imagem = models.FileField(upload_to='user_pics', validators=[validar_imagem_usuario], null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     bio = models.TextField(null=True)
@@ -36,3 +46,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+    
+class ExperienciaModel(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='experiencias')
+    tecnologia = models.ForeignKey(TecnologiaModel, on_delete=models.CASCADE)
+    nivel = models.CharField(max_length=20, choices=[
+        ('beginner', 'Iniciante'),
+        ('intermediate', 'Intermediário'),
+        ('advanced', 'Avançado'),
+        ('expert', 'Expert')
+    ])
