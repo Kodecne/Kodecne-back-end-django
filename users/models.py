@@ -46,6 +46,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+
+class SeguidoresModel(models.Model):
+    seguidor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seguindo')
+    seguido = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seguidores')
     
 class ExperienciaModel(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='experiencias')
