@@ -14,12 +14,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class SeguidoresSerializer(serializers.ModelSerializer):
+    seguidor = UserSerializer()
+    seguido = UserSerializer()
     class Meta:
         model = SeguidoresModel
-        fields = ['seguidor', 'seguido']
+        fields = ['id', 'seguidor', 'seguido']
 
 class ExperienciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExperienciaModel
-        fields = ['usuario', 'tecnologia', 'nivel']
+        fields = ['id', 'usuario', 'tecnologia', 'nivel']

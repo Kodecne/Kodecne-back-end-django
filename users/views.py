@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from .serializers import RegisterSerializer, ExperienciaSerializer, SeguidoresSerializer
+from .serializers import *
 from .models import ExperienciaModel, SeguidoresModel
 
 User = get_user_model()
@@ -21,6 +21,13 @@ class RegisterView(generics.CreateAPIView):
                 status=status.HTTP_201_CREATED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class SeguidoresListCreateView(generics.ListCreateAPIView):
     queryset = SeguidoresModel.objects.all()
