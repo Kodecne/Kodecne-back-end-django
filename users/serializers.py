@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import ExperienciaModel, SeguidoresModel
+from .models import *
 
 User = get_user_model()
 
@@ -13,7 +13,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
-
+    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -29,4 +29,4 @@ class SeguidoresSerializer(serializers.ModelSerializer):
 class ExperienciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExperienciaModel
-        fields = ['id', 'usuario', 'tecnologia', 'nivel']
+        fields = ['usuario', 'tecnologia', 'nivel']
