@@ -49,16 +49,29 @@ class UsersListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedAndActive]
+    def get(self, request):
+        serializer = UserSerializer(request.user, context={'request': request})
+        return Response(serializer.data)
 
 class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = [IsAuthenticatedAndActive]
+    permission_classes = [IsAuthenticatedAndActive]
+    def get(self, request):
+        serializer = UserSerializer(request.user, context={'request': request})
+        return Response(serializer.data)
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticatedAndActive]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user, context={'request': request})
+        return Response(serializer.data)
 
 class SeguidoresListCreateView(generics.ListCreateAPIView):
     queryset = SeguidoresModel.objects.all()
     serializer_class = SeguidoresSerializer
-    # permission_classes = [IsAuthenticatedAndActive]
+    permission_classes = [IsAuthenticatedAndActive]
     def perform_create(self, serializer):
         seguidor = serializer.validated_data.get('seguidor')
         seguido = serializer.validated_data.get('seguido')
@@ -70,15 +83,15 @@ class SeguidoresListCreateView(generics.ListCreateAPIView):
 class SeguidoresDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SeguidoresModel.objects.all()
     serializer_class = SeguidoresSerializer
-    # permission_classes = [IsAuthenticatedAndActive]
+    permission_classes = [IsAuthenticatedAndActive]
 
 class ExperiencaListCreateView(generics.ListCreateAPIView):
     queryset = ExperienciaModel.objects.all()
     serializer_class = ExperienciaSerializer
-    # permission_classes = [IsAuthenticatedAndActive]
+    permission_classes = [IsAuthenticatedAndActive]
 
 class ExperienciaDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ExperienciaModel.objects.all()
     serializer_class = ExperienciaSerializer
-    # permission_classes = [IsAuthenticatedAndActive]
+    permission_classes = [IsAuthenticatedAndActive]
     

@@ -36,8 +36,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-
+        fields = ['name', 'bio', 'imagem', 'telefone', 'endereco', 'genero', 'data_nascimento']
+    def get_imagem(self, obj):
+        request = self.context.get('request')
+        if obj.imagem:
+            # Retorna a URL completa com base na request
+            return request.build_absolute_uri(obj.imagem.url)
+        return None
 class SeguidoresSerializer(serializers.ModelSerializer):
     seguidor = UserSerializer()
     seguido = UserSerializer()
