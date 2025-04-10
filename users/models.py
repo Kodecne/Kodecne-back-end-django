@@ -2,7 +2,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.db import models
 from django.core.exceptions import ValidationError
 from tecnologias.models import TecnologiaModel
-import os
+import os, uuid
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -60,3 +60,10 @@ class ExperienciaModel(models.Model):
         ('advanced', 'Avançado'),
         ('expert', 'Expert')
     ])
+    
+
+class EmailVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_verification')
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)

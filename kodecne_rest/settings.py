@@ -74,6 +74,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'kodecne_rest.urls'
+# Simula o envio de emails no terminal
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 TEMPLATES = [
     {

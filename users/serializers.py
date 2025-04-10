@@ -36,7 +36,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'bio', 'imagem', 'telefone', 'endereco', 'genero', 'data_nascimento']
+        fields = ['name', 'bio', 'imagem', 'escolaridade', 'telefone', 'endereco', 'genero', 'data_nascimento']
     def get_imagem(self, obj):
         request = self.context.get('request')
         if obj.imagem:
