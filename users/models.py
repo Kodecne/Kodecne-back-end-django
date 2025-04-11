@@ -28,12 +28,12 @@ def validar_imagem_usuario(arquivo):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=60)
-    imagem = models.FileField(upload_to='user_pics', validators=[validar_imagem_usuario], null=True, blank=True)
+    name = models.CharField(max_length=60, unique=True)
+    imagem = models.FileField(upload_to='user_pics', default='user_pics/default.png', validators=[validar_imagem_usuario], null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     bio = models.TextField(null=True)
-    telefone = models.CharField(max_length=15, blank=True, null=True)
+    telefone = models.CharField(max_length=15, blank=True, null=True, unique=True)
     endereco = models.CharField(max_length=200, null=True)
     portfolio = models.URLField(blank=True, null=True)
     escolaridade = models.CharField(max_length=100, null=True)

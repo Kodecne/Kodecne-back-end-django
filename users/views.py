@@ -55,9 +55,10 @@ class EmailVerificationView(APIView):
             ver.is_used = True
             ver.user.save()
             ver.save()
-            return redirect('http://localhost:5173/login')
+            return redirect('http://localhost:5173/login?toast=email-verify-success')
         except EmailVerification.DoesNotExist:
-            return Response({"error": "Token inválido ou já utilizado"}, status=404)
+            return redirect('http://localhost:5173/login?toast=email-verify-error')
+
             
 
 class UsersListCreateView(generics.ListCreateAPIView):
