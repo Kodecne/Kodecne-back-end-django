@@ -9,8 +9,12 @@ from .models import *
 User = get_user_model()
     
 class PostListCreateView(generics.ListCreateAPIView):
-    queryset = PostModel.objects.all()
+    queryset = PostModel.objects.all().order_by('-data')
     serializer_class = PostSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(autor=self.request.user)
+    
 class PostDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
