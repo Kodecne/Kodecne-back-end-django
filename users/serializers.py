@@ -34,15 +34,32 @@ class RegisterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
     
 class UserSerializer(serializers.ModelSerializer):
+    github = serializers.URLField()
+    linkedin = serializers.URLField()
     class Meta:
         model = User
-        fields = ['name', 'bio', 'imagem', 'escolaridade', 'telefone', 'endereco', 'genero', 'data_nascimento']
+        fields = '__all__'
     def get_imagem(self, obj):
         request = self.context.get('request')
         if obj.imagem:
             # Retorna a URL completa com base na request
             return request.build_absolute_uri(obj.imagem.url)
         return None
+    
+    def validate_github(self, value:str):
+        if value.startswith(('https://github.com/', 'https://www.github.com/')):
+            return value
+        if value.startswith('github.com/'):
+            return f"https://{value}"
+        return serializers.ValidationError('Envie um link válido.')
+    
+    def validate_linkedin(self, value:str):
+        print('aaaa')
+        if value.startswith(('https://linkedin.com/', 'https://www.linkedin.com/')):
+            return value
+        if value.startswith(('linkedin.com/', 'www.linkedin.com/')):
+            return f"https://{value}"
+        raise serializers.ValidationError('Envie um link válido.')
 class SeguidoresSerializer(serializers.ModelSerializer):
     seguidor = UserSerializer()
     seguido = UserSerializer()

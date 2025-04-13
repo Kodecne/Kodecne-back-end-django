@@ -74,6 +74,7 @@ class UserDetailsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedAndActive]
     def get(self, request):
+        print(request.data)
         serializer = UserSerializer(request.user, context={'request': request})
         return Response(serializer.data)
 
