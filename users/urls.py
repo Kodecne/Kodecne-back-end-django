@@ -7,6 +7,7 @@ urlpatterns = [
     # path("", UsersListCreateView.as_view(), name="user-list-create"),
     # path("<int:pk>/", UserDetailsView.as_view(), name="user-detail"),
     path("me/", MeView.as_view(), name='me'),
+    path("profile/<int:pk>", UserProfileView.as_view(), name='profile'),
     path('email-verification/', EmailVerificationView.as_view(), name='email-verification'),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", LoginView.as_view(), name="login"),

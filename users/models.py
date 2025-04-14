@@ -3,6 +3,13 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from tecnologias.models import TecnologiaModel
 import os, uuid
+from django.utils.timezone import now
+
+def user_pic_upload_path(instance, filename):
+    ext = filename.split('.')[-1]
+    timestamp = now().strftime("%Y%m%d%H%M%S%f")  # AnoMêsDiaHoraMinSeg
+    new_filename = f"{timestamp}.{ext}"
+    return os.path.join("user_pics", new_filename)
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -29,7 +36,7 @@ def validar_imagem_usuario(arquivo):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=60, unique=True)
-    imagem = models.FileField(upload_to='user_pics', default='user_pics/default.png', validators=[validar_imagem_usuario], null=True, blank=True)
+    imagem = models.FileField(upload_to=user_pic_upload_path, default='user_pics/default.png', validators=[validar_imagem_usuario], null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     bio = models.TextField(null=True)
