@@ -62,6 +62,9 @@ INSTALLED_APPS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Permite conexões do frontend React
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173"
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',

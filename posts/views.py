@@ -1,8 +1,8 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from .serializers import *
 from .models import *
 
@@ -31,6 +31,24 @@ class PostListCreateView(generics.ListCreateAPIView):
 class PostDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+
+class CurtirPostAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, post_id):
+        try:
+            post = PostModel.objects.get(pk=post_id)
+        except PostModel.DoesNotExist:
+            return Response({"erro": "Post não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+
+        like_existente = LikesModel.objects.filter(post=post, usuario=request.user).first()
+
+        if like_existente:
+            like_existente.delete()
+            return Response({"mensagem": "Like removido com sucesso.", "likes":post.likes.count()}, status=status.HTTP_200_OK)
+        else:
+            LikesModel.objects.create(post=post, usuario=request.user)
+            return Response({"mensagem": "Post curtido com sucesso.", "likes":post.likes.count()}, status=status.HTTP_201_CREATED)
 
 class LikeListCreateView(generics.ListCreateAPIView):
     queryset = LikesModel.objects.all()

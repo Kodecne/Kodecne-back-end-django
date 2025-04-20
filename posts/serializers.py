@@ -6,24 +6,31 @@ from users.serializers import PublicUserSerializer
 User = get_user_model
 
 
-class PostMidiaSerializer(serializers.ModelSerializer):
+class MidiaSerializer(serializers.ModelSerializer):
+    tipo = serializers.SerializerMethodField()
+
     class Meta:
         model = MidiaPost
-        fields = '__all__'
-    def get_arquivo(self, obj):
-        request = self.context.get('request')
-        if obj.arquivo:
-            # Retorna a URL completa com base na request
-            return request.build_absolute_uri(obj.arquivo.url)
-        return None
+        fields = ['id', 'arquivo', 'tipo']
+
+    def get_tipo(self, obj):
+        if obj.arquivo.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+            return 'imagem'
+        elif obj.arquivo.name.lower().endswith(('.mp4', '.mov', '.avi', '.mkv')):
+            return 'video'
+        return 'desconhecido'
     
-    
+
 class PostSerializer(serializers.ModelSerializer):
     autor = PublicUserSerializer(read_only=True)
-    midias = PostMidiaSerializer(many=True, read_only=True)
+    midias = MidiaSerializer(many=True, read_only=True)
+    likes = serializers.SerializerMethodField()
     class Meta:
         model = PostModel
         fields = '__all__'
+    
+    def get_likes(self, obj):
+        return obj.likes.count()
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
