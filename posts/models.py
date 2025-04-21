@@ -30,3 +30,9 @@ class LikesModel(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts_que_curtiu')
     post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name='likes')
     data = models.DateTimeField(auto_now_add=True)
+
+class ComentarioModel(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comentarios_em_posts')
+    post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name='comentarios')
+    texto = models.TextField(max_length=350)
+    data = models.DateTimeField(auto_now_add=True)

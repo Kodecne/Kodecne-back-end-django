@@ -20,19 +20,34 @@ class MidiaSerializer(serializers.ModelSerializer):
             return 'video'
         return 'desconhecido'
     
+class ComentarioSerializer(serializers.ModelSerializer):
+    usuario = PublicUserSerializer(read_only=True)
+    class Meta:
+        model = ComentarioModel
+        fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
     autor = PublicUserSerializer(read_only=True)
     midias = MidiaSerializer(many=True, read_only=True)
-    likes = serializers.SerializerMethodField()
+    curtidas = serializers.SerializerMethodField()
+    curtido_por_mim = serializers.SerializerMethodField()  # 🚀 campo extra
+    comentarios = ComentarioSerializer(many=True, read_only=True)
+
     class Meta:
         model = PostModel
         fields = '__all__'
-    
-    def get_likes(self, obj):
+
+    def get_curtidas(self, obj):
         return obj.likes.count()
 
+    def get_curtido_por_mim(self, obj):
+        user = self.context['request'].user
+        if user.is_anonymous:
+            return False
+        return LikesModel.objects.filter(post=obj, usuario=user).exists()
+    
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LikesModel
         fields = '__all__'
+

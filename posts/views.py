@@ -56,3 +56,14 @@ class LikeListCreateView(generics.ListCreateAPIView):
 class LikeDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LikesModel.objects.all()
     serializer_class = LikeSerializer
+    
+class ComentarioListCreateView(generics.ListCreateAPIView):
+    serializer_class = ComentarioSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        return ComentarioModel.objects.filter(post_id=post_id).order_by('-data')
+
+    def perform_create(self, serializer):
+        post_id = self.kwargs['post_id']
+        serializer.save(usuario=self.request.user, post_id=post_id)
