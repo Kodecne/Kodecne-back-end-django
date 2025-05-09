@@ -41,7 +41,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     bio = models.TextField(null=True)
     telefone = models.CharField(max_length=15, blank=True, null=True, unique=True)
-    localidade = models.CharField(max_length=200, null=True)
     escolaridade = models.CharField(max_length=100, null=True)
     genero = models.CharField(max_length=50, choices=[('Feminino', 'Feminino'), ('Masculino', 'Masculino'), ('Outro', 'Outro')], null=True)
     linkedin = models.CharField(max_length=100, null=True)
