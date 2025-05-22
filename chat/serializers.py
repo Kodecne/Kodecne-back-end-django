@@ -9,3 +9,8 @@ class ChatMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatMessage
         fields = ['id', 'sender', 'receiver', 'content', 'timestamp', 'is_read']
+
+class ConversationSerializer(serializers.Serializer):
+    user = UserSerializer()
+    last_message = ChatMessageSerializer()
+    unread_count = serializers.IntegerField()
