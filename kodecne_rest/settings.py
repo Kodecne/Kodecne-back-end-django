@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'posts',
     'rest_framework',
     'rest_framework_simplejwt',
-    'corsheaders'
+    'corsheaders',
+    'chat'
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Permite conexões do frontend React
