@@ -28,15 +28,18 @@ class RegisterView(generics.CreateAPIView):
             user = serializer.save(is_active=False)
 
             verificacao = EmailVerification.objects.create(user=user)
+            CONSOLE = True
             link = f"http://127.0.0.1:8000/users/email-verification?token={verificacao.token}"
-            
-            send_mail(
-                "KODECNE: Confirme seu email",
-                f"Acesse: {link}",
-                "kodecne@gmail.com",
-                [user.email],
-                fail_silently=False
-            )
+            if CONSOLE:
+                print(f"Link de verificação: {link}")
+            else:
+                send_mail(
+                    "KODECNE: Confirme seu email",
+                    f"Acesse: {link}",
+                    "kodecne@gmail.com",
+                    [user.email],
+                    fail_silently=False
+                )
             
             return Response(
                 {"message": "Para confirmar que é você, verifique seu e-mail."},

@@ -15,10 +15,20 @@ class ChatMessageListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         other_user_id = self.request.query_params.get('user_id')
         if other_user_id:
-            return ChatMessage.objects.filter(
+            # Buscar mensagens
+            messages = ChatMessage.objects.filter(
                 Q(sender=self.request.user, receiver_id=other_user_id) |
                 Q(sender_id=other_user_id, receiver=self.request.user)
             ).order_by('timestamp')
+            
+            # Marcar mensagens recebidas como lidas
+            unread_messages = messages.filter(
+                receiver=self.request.user,
+                is_read=False
+            )
+            unread_messages.update(is_read=True)
+            
+            return messages
         return ChatMessage.objects.none()
 
     def perform_create(self, serializer):
@@ -81,3 +91,19 @@ class ConversationList(generics.ListAPIView):
             })
 
         return sorted(conversations, key=lambda x: x['last_message'].timestamp, reverse=True)
+
+class MarkMessagesAsRead(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        sender_id = request.data.get('sender_id')
+        if sender_id:
+            # Marca todas as mensagens não lidas deste remetente como lidas
+            unread_messages = ChatMessage.objects.filter(
+                sender_id=sender_id,
+                receiver=request.user,
+                is_read=False
+            )
+            unread_messages.update(is_read=True)
+            return Response({'status': 'messages marked as read'})
+        return Response({'error': 'sender_id not provided'}, status=400)
