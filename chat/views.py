@@ -7,6 +7,10 @@ from django.db import models
 from .models import ChatMessage
 from .serializers import ChatMessageSerializer, ConversationSerializer
 from users.models import User
+from django.utils.timezone import now
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import json
 
 class ChatMessageListCreate(generics.ListCreateAPIView):
     serializer_class = ChatMessageSerializer
@@ -33,7 +37,25 @@ class ChatMessageListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         receiver_id = self.request.data.get('receiver_id')
-        serializer.save(sender=self.request.user, receiver_id=receiver_id)
+        content = self.request.data.get('content', '')
+        images = self.request.FILES.getlist('images')
+        image_urls = []
+        
+        if images:
+            for image in images:
+                ext = image.name.split('.')[-1]
+                timestamp = now().strftime("%Y%m%d%H%M%S")
+                filename = f'chat_images/{self.request.user.id}_{timestamp}.{ext}'
+                
+                saved_path = default_storage.save(filename, ContentFile(image.read()))
+                image_urls.append(saved_path)
+
+        serializer.save(
+            sender=self.request.user,
+            receiver_id=receiver_id,
+            content=content,
+            images=image_urls
+        )
 
 class ChatMessageUnread(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
