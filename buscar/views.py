@@ -13,8 +13,6 @@ from tecnologias.serializers import TecnologiaSerializer
 from posts.serializers import PostSerializer
 
 class SearchAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
         query = request.query_params.get('query', '').strip()
         search_type = request.query_params.get('type', '').strip()

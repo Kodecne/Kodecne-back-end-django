@@ -25,5 +25,6 @@ urlpatterns = [
     path('posts/', include('posts.urls')),
     path('tecnologias/', include('tecnologias.urls'), name='tecnologias'),
     path('chat/', include('chat.urls'), name='chat'),
+    path('buscar/', include('buscar.urls')),
 ]
 urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
